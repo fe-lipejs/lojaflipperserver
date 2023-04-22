@@ -13,21 +13,19 @@ const Categorias = require('./app/controllers/api/Categorias');
 
 router.use(cors());
 
-/* ROTAS API get*/
-router.get('/categorias', Categorias.get);
-router.get('/produtos', produtos.get);
-/* ROTAS API post */
-router.post('/produtos', produtos.post);
 
 
 
-/* ROTAS NORMAIS */
+/* ---------------ROTAS APIS----------------- */
+
 //ROTAS GET
 router.get('/hello', (req, res) => {
     res.send('Hello World!');
   });
+router.get('/categorias', Categorias.get);
 router.get('/user/:id', checarTokenMiddleware,testeBuscarIdController.buscarId)
-
+router.get('/produtos/:id_produto', produtos.get);
+router.get('/produtos-home/:limite/:deslocamento', produtos.getProdutosHome);
 
 //ROTAS POST
 router.post('/produtos', produtos.post);

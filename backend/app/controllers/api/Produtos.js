@@ -84,7 +84,21 @@ async function saveProductImageInStorage(id, nomeProduto, categoria, subcategori
 }
 const produtos = {
     get: async (req, res) => {
-        res.send("A rota produtos está funcionando perfeitamente como get!!!")
+        const id_produto = req.params.id_produto
+        //chegar se usuário existe
+        const produto = await produtoCollection.findById(id_produto) // para segurança, todos os dados do usuário irão ser exibidos, execeto a senha
+
+        if (!produto) {
+            return res.status(404).json({ msg: "Produto não encontrado!" })
+        }
+
+
+        try {
+            res.status(200).json(produto)
+        } catch (error) {
+            console.log('Produto não encontrado')
+
+        }
     },
     post: async (req, res) => {
         const produto = req.body
@@ -206,8 +220,11 @@ const produtos = {
                         saveProductImageInStorage(idProduto, produtoNome, categoria, subcategoria, cor, img3, 'img3')
                         saveProductImageInStorage(idProduto, produtoNome, categoria, subcategoria, cor, img4, 'img4')
                     }
-
+                    const data = { produto_id: idProduto };
+                    res.status(200).json(data);
                 } catch (error) {
+                    const data = { message: 'Erro ao salvar dados no servidor!', error };
+                    res.status(501).json(data)
                     console.log('OPS, houve um erro: ', error)
                 }
 
@@ -218,6 +235,8 @@ const produtos = {
             });
         // --------------------CRIACAO DE IMAGENS------------
 
+        //const data = { id: 'Dados salvos com sucesso!' };
+        // res.status(200).json(data);
 
 
 
@@ -227,8 +246,47 @@ const produtos = {
 
 
 
+    },
+    getProdutosHome: async (req, res) => {
+        const limite = parseInt(req.params.limite) || 10;
+        const deslocamento = parseInt(req.params.deslocamento) || 0;
+        console.log("limite: ", limite)
+        console.log("deslocamento: ", deslocamento)
+
+
+        produtoCollection.find()
+            .skip(deslocamento)
+            .limit(limite)
+            .exec()
+            .then((produtos) => {
+                const resultadosProdutos = produtos
+
+                //produtoCollection.countDocuments({ preco: { $gt: 10 } }) // Observe que o objeto de consulta { preco: { $gt: 10 } } é passado como argumento para o método countDocuments(). Esse objeto de consulta instrui o Mongoose a contar apenas os documentos que têm o campo preco maior do que 10.
+                produtoCollection.countDocuments()
+                    .then((count) => {
+                        
+                        // envia os resultados para o Vue.js
+                        enviarResposta(resultadosProdutos, count)
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        return;
+                    });
+
+            })
+            .catch((err) => {
+                console.error(err);
+                return;
+            });
+
+
+
+        function enviarResposta(resultadosProdutos, numeroResultadosProdutos) {
+            res.status(201).json({ produtos: resultadosProdutos, numeroResultados: numeroResultadosProdutos });
+        }
 
     }
+
 }
 
 module.exports = produtos;
