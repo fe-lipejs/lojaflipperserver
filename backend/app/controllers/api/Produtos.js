@@ -12,7 +12,9 @@ const { log } = require('console');
 async function saveProductImageInStorage(id, nomeProduto, categoria, subcategoria, corVariacao, imagem, imagemName) {
     //public storage/public/id/variacoes/
     // Create Variable with Base64 Image String
-    const dir = '../../../public/produtos/' + categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '_' + nomeProduto + '/' + corVariacao + '/';
+    const nomeProdutoMinusculo = nomeProduto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_").toLowerCase();
+
+    const dir = '../../../public/produtos/' + categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '$' + nomeProdutoMinusculo + '/' + corVariacao + '/';
 
     if (imagem && await imagem.includes('data:image/png;base64')) {
         const base64Data = imagem.replace('data:image/png;base64', '');
@@ -22,7 +24,8 @@ async function saveProductImageInStorage(id, nomeProduto, categoria, subcategori
         const imagemNameAndExtension = imagemName + '.png'
         const imagePath = path.join(__dirname, dir, imagemNameAndExtension);
         const dirPath = path.dirname(imagePath);
-        const srcImagemBancoDeDados = categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '_' + nomeProduto + '/' + corVariacao + '/' + imagemNameAndExtension;
+        console.log(nomeProdutoMinusculo)
+        const srcImagemBancoDeDados = categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '$' + (nomeProdutoMinusculo) + '/' + corVariacao + '/' + imagemNameAndExtension;
 
         if (!fs.existsSync(dirPath)) {
             // Se não existe, cria o diretório
@@ -52,7 +55,7 @@ async function saveProductImageInStorage(id, nomeProduto, categoria, subcategori
         const imagemNameAndExtension = imagemName + '.jpg'
         const imagePath = path.join(__dirname, dir, imagemNameAndExtension);
         const dirPath = path.dirname(imagePath);
-        const srcImagemBancoDeDados = categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '_' + nomeProduto + '/' + corVariacao + '/' + imagemNameAndExtension;
+        const srcImagemBancoDeDados = categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '_' + (nomeProdutoMinusculo) + '/' + corVariacao + '/' + imagemNameAndExtension;
 
         if (!fs.existsSync(dirPath)) {
             // Se não existe, cria o diretório
@@ -264,7 +267,7 @@ const produtos = {
                 //produtoCollection.countDocuments({ preco: { $gt: 10 } }) // Observe que o objeto de consulta { preco: { $gt: 10 } } é passado como argumento para o método countDocuments(). Esse objeto de consulta instrui o Mongoose a contar apenas os documentos que têm o campo preco maior do que 10.
                 produtoCollection.countDocuments()
                     .then((count) => {
-                        
+
                         // envia os resultados para o Vue.js
                         enviarResposta(resultadosProdutos, count)
                     })
@@ -285,7 +288,14 @@ const produtos = {
             res.status(201).json({ produtos: resultadosProdutos, numeroResultados: numeroResultadosProdutos });
         }
 
-    }
+    },
+    getImageCapa: async (req, res) => {
+
+        const imagePath = path.join(__dirname, '../../../public', 'produtos', req.params.imageUrl)
+        res.download(imagePath);
+        console.log(imagePath)
+
+    },
 
 }
 
