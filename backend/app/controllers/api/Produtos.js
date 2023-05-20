@@ -24,7 +24,6 @@ async function saveProductImageInStorage(id, nomeProduto, categoria, subcategori
         const imagemNameAndExtension = imagemName + '.png'
         const imagePath = path.join(__dirname, dir, imagemNameAndExtension);
         const dirPath = path.dirname(imagePath);
-        console.log(nomeProdutoMinusculo)
         const srcImagemBancoDeDados = categoria + '/' + (subcategoria ? subcategoria + '/' : '') + id + '$' + (nomeProdutoMinusculo) + '/' + corVariacao + '/' + imagemNameAndExtension;
 
         if (!fs.existsSync(dirPath)) {
@@ -253,8 +252,7 @@ const produtos = {
     getProdutosHome: async (req, res) => {
         const limite = parseInt(req.params.limite) || 10;
         const deslocamento = parseInt(req.params.deslocamento) || 0;
-        console.log("limite: ", limite)
-        console.log("deslocamento: ", deslocamento)
+       
 
 
         produtoCollection.find()
@@ -293,7 +291,7 @@ const produtos = {
 
         const imagePath = path.join(__dirname, '../../../public', 'produtos', req.params.imageUrl)
         res.download(imagePath);
-        console.log(imagePath)
+       
 
     },
 
