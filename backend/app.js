@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 })
 
 
-/* app.use(session({
+ app.use(session({
   // store: new RedisStore({client: RedisStore}),
   secret: 'outraChaveSecreta',
   resave: false,
@@ -53,7 +53,7 @@ app.use((req, res, next) => {
     path: '/'
   }
 }))
- */
+ 
 
 //--------------------------------------------------------------
 //permitir json

@@ -65,12 +65,13 @@ const Carrinho = {
 
         CarrinhoModel.find({})
             .then(carrinho => {
-               
+
                 for (let index = 0; index < carrinho.length; index++) {
                     const preco = carrinho[index].preco;
                     precoTotal = precoTotal + preco
                 }
-                res.status(200).send([carrinho,precoTotal]);
+
+                res.status(200).send([carrinho, precoTotal]);
             })
             .catch(err => {
                 console.log(err);
@@ -81,18 +82,20 @@ const Carrinho = {
     },
     post: async (req, res) => {
         console.log(req.body);
-        /* req.session.carrinho = req.body
-        res.send(req.session.carrinho);
- */
-        res.cookie('meuCookie', 'valorDoCookie', {
-            expires: new Date(Date.now() + 900000),
-            sameSite: 'strict',
-            httpOnly: true,
-            secure: true,
-            domain: '.127.0.0.1',
-        });
-        res.send('Cookie definido');
+        req.session.carrinho = 123
+        //res.send(req.session.carrinho);
+        res.status(201).json({ mensagem: req.session.carrinho });
 
+
+        /*  res.cookie('meuCookie', 'valorDoCookie', {
+             expires: new Date(Date.now() + 900000),
+             sameSite: 'strict',
+             httpOnly: true,
+             secure: true,
+             domain: '.127.0.0.1',
+         });
+         res.send('Cookie definido');
+ */
 
 
     },
@@ -102,11 +105,19 @@ const Carrinho = {
     delete: async (req, res) => {
         const id = req.params.id;
 
+        let precoTotal = 0
+
+
         CarrinhoModel.findOneAndDelete({ id: id })
             .then(carrinho => {
                 CarrinhoModel.find({})
                     .then(carrinhoAll => {
-                        res.status(200).send(carrinhoAll);
+                        for (let index = 0; index < carrinhoAll.length; index++) {
+                            const preco = carrinhoAll[index].preco;
+                            precoTotal = precoTotal + preco
+                        }
+
+                        res.status(200).send([carrinhoAll, precoTotal]);
                     })
                     .catch(err => {
                         console.log(err);
