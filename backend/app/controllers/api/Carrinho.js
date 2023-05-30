@@ -5,7 +5,7 @@ const CarrinhoModel = require('../../models/Carrinho')
 const Carrinho = {
     adicionarCarrinho: async (req, res) => {
         console.log('resposta: ')
-        console.log(req.body)
+        console.log(req.body[0])
         const carrinhoArray = req.body; // Supondo que o array esteja dentro da chave 'carrinho' em req.body
 
         //Verificar se já existe o ID, caso sim apenas irá adicionar +1 ao valor quantidade, caso contrário irá apenas criar um novo 
@@ -16,27 +16,30 @@ const Carrinho = {
         })
             .then(carrinho => {
                 if (carrinho) {
-                    //console.log('Encontrado no carrinho:', carrinho);
-                    CarrinhoModel.findOneAndUpdate(
-                        {
-                            id: req.body[0].id,
-                            cor: req.body[0].cor,
-                            tamanho: req.body[0].tamanho
-                        },
-                        { $inc: { quantidade: +1 } }, /* $inc soma/incrementar um valor, $set atualiza o valor */
-                        { new: true }
-                    )
-                        .then(carrinhoAtualizado => {
-                            res.send('Carrinho atualizado com sucesso!');
-                            console.log(carrinhoAtualizado)
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    if (carrinho.estoqueProduto == 0 || req.body[0].quantidade > carrinho.estoqueProduto) {
+                        console.log("Não pode adicionar acima da quantidade armazenada no estoque: ")
+                    } else {
+                        CarrinhoModel.findOneAndUpdate(
+                            {
+                                id: req.body[0].id,
+                                cor: req.body[0].cor,
+                                tamanho: req.body[0].tamanho
+                            },
+                            { $inc: { quantidade: +1 } }, /* $inc soma/incrementar um valor, $set atualiza o valor */
+                            { new: true }
+                        )
+                            .then(carrinhoAtualizado => {
+                                res.send('Carrinho atualizado com sucesso!');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
                 } else {
                     console.log(carrinho)
                     CarrinhoModel.insertMany(carrinhoArray)
-                        .then(() => {
+                        .then((x) => {
+                            console.log(x)
                             res.send('Carrinho salvo com sucesso!');
                         })
                         .catch((err) => {
@@ -61,17 +64,9 @@ const Carrinho = {
     },
     get: async (req, res) => {
 
-        let precoTotal = 0
-
         CarrinhoModel.find({})
             .then(carrinho => {
-
-                for (let index = 0; index < carrinho.length; index++) {
-                    const preco = carrinho[index].preco;
-                    precoTotal = precoTotal + preco
-                }
-
-                res.status(200).send([carrinho, precoTotal]);
+                res.status(200).send(carrinho);
             })
             .catch(err => {
                 console.log(err);
@@ -103,21 +98,15 @@ const Carrinho = {
         console.log('put')
     },
     delete: async (req, res) => {
-        const id = req.params.id;
+        const _id = req.params._id;
+      
 
-        let precoTotal = 0
-
-
-        CarrinhoModel.findOneAndDelete({ id: id })
+        CarrinhoModel.findOneAndDelete({ _id: _id })
             .then(carrinho => {
                 CarrinhoModel.find({})
                     .then(carrinhoAll => {
-                        for (let index = 0; index < carrinhoAll.length; index++) {
-                            const preco = carrinhoAll[index].preco;
-                            precoTotal = precoTotal + preco
-                        }
-
-                        res.status(200).send([carrinhoAll, precoTotal]);
+                       // console.log("-----------Carrinho no DELETE:---------",carrinhoAll.imagem);
+                        res.status(200).send(carrinhoAll);
                     })
                     .catch(err => {
                         console.log(err);

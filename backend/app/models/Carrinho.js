@@ -32,6 +32,10 @@ const carrinhoSchema = new mongoose.Schema({
     type: Number,
     
   },
+  estoqueProduto: {
+    type: Number,
+    
+  },
 
 
 

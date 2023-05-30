@@ -15,9 +15,15 @@ const fs = require('fs');
 
 
 //-----------------------------------------------
-const db_name = process.env.DATABASE_NAME
-const db_host = process.env.HOST
-const db_port = process.env.PORT
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASS;
+
+const dbURL = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
+const dbURL2 = `mongodb://raffroslipeadmin:Je4everSus77@45.93.100.74:27017/LojaFlipper`;
+
 //----------------------------------------------
 
 
@@ -86,10 +92,10 @@ app.use('/', router);
 */
 
 mongoose
-  .connect(`mongodb://${db_host}:${db_port}/${db_name}`)
+  .connect(dbURL)
   .then(() => {
     app.listen(3000)
     console.log('Conectado ao Banco de Dados')
   })
-  .catch((err) => console.log('Houve um erro no DB: ' + err))
+  .catch((err) => console.log(err))
 

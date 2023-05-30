@@ -40,7 +40,7 @@ router.post('/carrinho', Carrinho.post);
 router.post('/carrinho/adicionar', Carrinho.adicionarCarrinho);
 
 //ROTAS DELETE
-router.delete('/carrinho-delete/:id', Carrinho.delete);
+router.delete('/carrinho-delete/:_id', Carrinho.delete);
 
 
 
