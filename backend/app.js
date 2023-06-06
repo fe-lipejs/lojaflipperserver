@@ -13,16 +13,16 @@ const fs = require('fs');
 //---------------CRIAÇÃO SERVIDOR HTTPS SIMPLES-----------
 
 
-
 //-----------------------------------------------
 const dbHost = process.env.DB_HOST;
 const dbPort = process.env.DB_PORT;
-const dbName = process.env.DB_NAME;
+const dbName = process.env.DB_NAME ;
 const dbUser = process.env.DB_USER;
 const dbPass = process.env.DB_PASS;
 
 const dbURL = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
-const dbURL2 = `mongodb://raffroslipeadmin:Je4everSus77@45.93.100.74:27017/LojaFlipper`;
+//const dbURL2 = `mongodb://raffroslipeadmin:Je4everSus77@45.93.100.74:27017/LojaFlipper`;mongodb://localhost:27017/?authMechanism=DEFAULT
+const dbURL2 = `mongodb://${dbHost}:${dbPort}/${dbName}`;
 
 //----------------------------------------------
 
@@ -44,7 +44,6 @@ app.use((req, res, next) => {
   next();
 })
 
-
  app.use(session({
   // store: new RedisStore({client: RedisStore}),
   secret: 'outraChaveSecreta',
@@ -53,10 +52,9 @@ app.use((req, res, next) => {
   cookie: {
     sameSite: 'none',
     secure: false,
-    // httpOnly: true,
+    httpOnly: true,
     maxAge: 5 * 60 * 1000,
-    domain: '127.0.0.1',
-    path: '/'
+    
   }
 }))
  
@@ -90,7 +88,7 @@ app.use('/', router);
  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));  
 */
-
+console.log(dbURL)
 mongoose
   .connect(dbURL)
   .then(() => {

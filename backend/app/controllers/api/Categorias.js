@@ -12,7 +12,26 @@ const categoriaCollection = mongoose.model('categorias', categoriaCollectionSche
 const Categoria = {
     get: async (req, res) => {
 
-        const id = "641fa09478c66761f515511f";
+        const documentId = '6477f6d97512d783326b2d6e';
+
+        /* categoriaCollection.updateOne(
+            { _id: documentId },
+            {
+                $push: {
+                    'categorias.Masculino': ['Camisas', 'Calças', 'Calçados', 'Acessórios'],
+                    'categorias.Feminino': ['Blusas', 'Saias', 'Calçados', 'Acessórios']
+                }
+            }
+        )
+            .then(result => {
+                console.log('Valor inserido com sucesso no objeto Masculino:', result);
+            })
+            .catch(err => {
+                console.error('Erro ao inserir valor no objeto Masculino:', err);
+            });
+ */
+
+         const id = "641fa09478c66761f515511f";
         const categorias = await categoriaCollection.find({ })
         console.log(categorias[0].categorias)
 
@@ -24,7 +43,7 @@ const Categoria = {
         } catch (error) {
             console.log('Usuário não encontrado')
 
-        }
+        } 
 
     }
 }

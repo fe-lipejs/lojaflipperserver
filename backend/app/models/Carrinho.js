@@ -38,7 +38,6 @@ const carrinhoSchema = new mongoose.Schema({
   },
 
 
-
 })
 
 const CarrinhoModel = mongoose.model('CarrinhoModel', carrinhoSchema);
