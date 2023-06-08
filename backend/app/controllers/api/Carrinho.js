@@ -9,7 +9,7 @@ const Carrinho = {
         produtoNome = req.body[0].nome
         produtoTamanho = req.body[0].tamanho
         produtoId = req.body[0].id
-       
+       console.log("Adicionar CArrinho");
         const dados = req.body[0]
 
         let carrinhoNovo = true
@@ -56,7 +56,9 @@ const Carrinho = {
                             req.session.carrinho = []
                             req.session.carrinho.push(dados);
                             req.session.save()
-                            console.log("Carrinho adicionado")
+                            
+                            console.log("Carrinho sessão adicionado");
+                            console.log("Carrinho adicionado:", req.session.carrinho)
                             }else{
                                 console.log("Estoque máximo atingido ou estoque zerado")
                             }
@@ -69,6 +71,7 @@ const Carrinho = {
                                     if(estoqueNoBD > 0 && req.session.carrinho[index].quantidade < estoqueNoBD){
                                     req.session.carrinho[index].quantidade = req.session.carrinho[index].quantidade+1;
                                     req.session.save()
+                                    console.log("Carrinho sessão adicionado 2");
                                     }else{
                                         console.log("Estoque máximo atingido ou estoque zerado")
                                     }
