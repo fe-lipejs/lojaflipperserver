@@ -20,8 +20,9 @@ const dbURL = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
 const dbURL2 = `mongodb://${dbHost}:${dbPort}/${dbName}`;
 
 const app = express();
+//app.set('trust proxy',1)
 app.use(cors({
-  origin: true,
+  origin: 'http://127.0.0.1:8080',
   credentials: true,
   exposedHeaders: ['set-cookie']
 }));
@@ -34,7 +35,7 @@ app.use(session({
     sameSite: 'none',
     secure: true,
     httpOnly: false,
-    maxAge: 5 * 60 * 1000
+    maxAge: 50 * 1000
   }
 }));
 
