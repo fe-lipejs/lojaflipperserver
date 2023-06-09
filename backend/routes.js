@@ -38,9 +38,10 @@ router.get('/produtos-imagemcapa/:imageUrl', produtos.getImageCapa) // pega imag
 //carrinho
 router.post('/carrinho', Carrinho.post);
 router.post('/carrinho/adicionar', Carrinho.adicionarCarrinho);
+router.post('/carrinho-delete/:id/:cor/:tamanho', Carrinho.delete);
+
 
 //ROTAS DELETE
-router.delete('/carrinho-delete/:_id', Carrinho.delete);
 
 
 
