@@ -29,15 +29,19 @@ router.get('/produtos/:id_produto', produtos.get);
 router.get('/produtos-home/:limite/:deslocamento', produtos.getProdutosHome); //exibir produtos na pagina inicial e com paginação
 //carrinho
 router.get('/carrinho', Carrinho.get);
+//produto
+router.get('/produtos-filtro', produtos.filtro);
+router.get('/produtos-imagemcapa/:imageUrl', produtos.getImageCapa) // pega imagem de capa para exibir nos card de cada produto
+
 
 //ROTAS POST
 router.post('/produtos', produtos.post);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-router.get('/produtos-imagemcapa/:imageUrl', produtos.getImageCapa) // pega imagem de capa para exibir nos card de cada produto
-//carrinho
+//---carrinho
 router.post('/carrinho', Carrinho.post);
 router.post('/carrinho/adicionar', Carrinho.adicionarCarrinho);
+router.post('/carrinho/addquantidade', Carrinho.adicionarQuantidadeCarrinho);
 router.post('/carrinho-delete/:id/:cor/:tamanho', Carrinho.delete);
 
 

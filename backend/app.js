@@ -59,7 +59,7 @@ const credentials = {
 const httpsServer = https.createServer(credentials, app);
 
 mongoose
-  .connect(dbURL)
+  .connect(dbURL2)
   .then(() => {
     httpsServer.listen(portServer);
     console.log('Conectado ao Banco de Dados, o servidor HTTPS está rodando na porta:', portServer);

@@ -252,7 +252,7 @@ const produtos = {
     getProdutosHome: async (req, res) => {
         const limite = parseInt(req.params.limite) || 10;
         const deslocamento = parseInt(req.params.deslocamento) || 0;
-       
+
 
 
         produtoCollection.find()
@@ -291,11 +291,44 @@ const produtos = {
 
         const imagePath = path.join(__dirname, '../../../public', 'produtos', req.params.imageUrl)
         res.download(imagePath);
-       
+
 
     },
+    //---------FILTRO DE PRODUTOSP-----------------
+    filtro: async (req, res) => {
+        let cores = new Set();
+        let subcategorias = new Set();
 
-}
+
+        produtoCollection.find({ categoria: 'Masculino' })
+            .then(data => {
+                 for (const dt of data) {
+                    const corProd = dt.produtoEstoque;
+                    const keys = [...corProd.keys()];
+
+                    const subcategoriaProd = dt.subcategoria
+                   
+                    
+                    // Adicionar as chaves (cores) ao conjunto
+                    keys.forEach(cor => {
+                        cores.add(cor);
+                    });
+                    subcategorias.add(subcategoriaProd)
+
+                  
+                }
+
+                // Converter o conjunto para um array
+                const coresUnicas = Array.from(cores);
+                const subcategoriasArrays = Array.from(subcategorias)
+                res.status(201).json({coresUnicas,subcategoriasArrays});  
+            })
+            .catch(err => {
+                console.error('Erro ao consultar os produtos:', err);
+            });
+        }
+
+    }
 
 module.exports = produtos;
 
